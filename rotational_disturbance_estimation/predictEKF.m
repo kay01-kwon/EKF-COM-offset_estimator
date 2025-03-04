@@ -59,12 +59,12 @@ dq_dw = 0.5*q_prior_skiew*dt;
 dq_dtau = zeros(4,3);
 
 dw_dq = zeros(3,4);
-dw_dw = dt*J_inv*[0,              (J_zz-J_yy)*wz, (J_zz-J_yy)*wy;
-                (J_xx-J_zz)*wz,  0,              (J_xx-J_zz)*wx;
-                (J_yy-J_xx)*wy,  (J_yy-J_xx)*wx, 0];
+dw_dw = -dt*J_inv*[0,              (J_zz-J_yy)*wz, (J_zz-J_yy)*wy;
+                  (J_xx-J_zz)*wz,  0,              (J_xx-J_zz)*wx;
+                  (J_yy-J_xx)*wy,  (J_yy-J_xx)*wx, 0];
 dw_dw = eye(3) + dw_dw;
 
-dw_dtau = dt*J_inv;
+dw_dtau = J_inv*dt;
 
 
 dtau_dq = zeros(3,4);
@@ -86,6 +86,7 @@ w_pred = w_prior + J_inv*(m - cross(w_prior,J*w_prior) + tau)*dt;
 s_pred = [q_pred;w_pred;tau];
 
 Rt = 0.01^2*eye(10);
+Rt(8:10,8:10) = 0.1*eye(3);
 
 cov_pred = A*cov_old*A' + Rt;
 
